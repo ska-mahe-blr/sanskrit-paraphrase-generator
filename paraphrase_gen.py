@@ -40,9 +40,21 @@ for tagged_input in inputs:
         print(f"No gender info found for {x}")
           # skip to next input
 
-  
-    for lifgam in lifgams:
+    if tag == 'A5':
+        # For A5: <x-y>A5 => x’{1} y{1} यस्मिन् देशे
+        y_list = generator.generate_y_root_B(y, 1)
+        
+        # Remove duplicate values in dictionary
+        # Using dictionary comprehension
+        temp = {val: key for key, val in y_list.items()}
+        y_list = {val: key for key, val in temp.items()}
+        print(y_list)
+        for y1, lifgam in y_list.items():
+            x1 = generator.generate_x_root(x,lifgam, 1)
+            print(f"{x1} {y1} yasmin xeSe")
 
+    for lifgam in lifgams:
+    
         match tag:
 
             # For A<num>
@@ -54,7 +66,27 @@ for tagged_input in inputs:
                     case tag if tag == 'A2':
                         x1 = generator.generate_x_root(x,lifgam, 3)
 
-                        print(f'{x1} viparIwam vqwwam')
+                        print(f'{x1} viparIwam vqwwam') # NOT WORKING
+
+                    # For A4: <x-y>A4 => x{6} y’{6} समाहारः
+                    case tag if tag == 'A4':
+                        x1 = generator.generate_x_root(x,lifgam, 6)
+
+                        y_list = generator.generate_y_root(y, 6)
+
+                        for y1 in list(set(y_list)):
+                            print(f"{x1} {y1} samAhAraH") # NOT WORKING
+                    
+                    # For A7: <x-y>A7 => y{6} x
+                    case tag if tag == 'A7':
+                        
+                        y_list = generator.generate_y_root(y, 6)
+                        print(y_list)
+                        for y1 in list(set(y_list)):
+                            print(f"{y1} {x}")# NOT WORKING
+
+                    
+ 
 
             ############################################
                        
@@ -165,10 +197,246 @@ for tagged_input in inputs:
 
                 match tag:
 
+                    # For Bs2: <x-y>Bs2 => x{1} y{1} यत ्{g}{2}
                     case tag if tag[-2:] == 's2':
+                        x1 = generator.generate_x_root_B(x,lifgam, 1)
+                        print(x1, y, 'in')
+                        y_list = generator.generate_y_root_B(y, 1)
+                        # Remove duplicate values in dictionary
+                        # Using dictionary comprehension
+                        temp = {val: key for key, val in y_list.items()}
+                        y_list = {val: key for key, val in temp.items()}
+                        for y1, lifgam in y_list.items():
+                            if lifgam == 'puM':
+                                z1 = 'yaM'
+                            elif lifgam == 'swrI':
+                                z1 = 'yAM'
+                            else:
+                                z1 = 'yaw'
+                            print(f"{x1} {y1} {z1}")
+
+                    # For Bs3: <x-y>Bs3 => x{1} y{1} येन/यया/येन
+                    case tag if tag[-2:] == 's3':
+                        x1 = generator.generate_x_root_Bs3(x,lifgam, 1)
+                            
+                        y_list = generator.generate_y_root_B(y, 1)
+                        # Remove duplicate values in dictionary
+                        # Using dictionary comprehension
+                        temp = {val: key for key, val in y_list.items()}
+                        y_list = {val: key for key, val in temp.items()}
+                        for y1, lifgam in y_list.items():
+                            if lifgam == 'puM':
+                                z1 = 'yena'
+                            elif lifgam == 'swrI':
+                                z1 = 'yayA'
+                            else:
+                                z1 = 'yena'
+                            print(f"{x1} {y1} {z1}")
+
+                    # For Bs4: <x-y>Bs4 => x{1} y{1} यस्मै/यस्यै/यस्मै
+                    case tag if tag[-2:] == 's4':
+                        x1 = generator.generate_x_root_Bs4(x,lifgam, 1)
+                            
+                        y_list = generator.generate_y_root_B(y, 1)
+                        # Remove duplicate values in dictionary
+                        # Using dictionary comprehension
+                        temp = {val: key for key, val in y_list.items()}
+                        y_list = {val: key for key, val in temp.items()}
+                        for y1, lifgam in y_list.items():
+                            if lifgam == 'puM':
+                                z1 = 'yasmE'
+                            elif lifgam == 'swrI':
+                                z1 = 'yasyE'
+                            else:
+                                z1 = 'yasmE'
+                            print(f"{x1} {y1} {z1}") # NOT WORKING
+
+                    # For Bs5: <x-y>Bs5 => x{1} y{1} यस्मात्/यस्याः/यस्मात्
+                    case tag if tag[-2:] == 's5':
+                        x1 = generator.generate_x_root_Bs3(x,lifgam, 1)
+                            
+                        y_list = generator.generate_y_root_B(y, 1)
+                        # Remove duplicate values in dictionary
+                        # Using dictionary comprehension
+                        temp = {val: key for key, val in y_list.items()}
+                        y_list = {val: key for key, val in temp.items()}
+                        for y1, lifgam in y_list.items():
+                            if lifgam == 'puM':
+                                z1 = 'yasmAw'
+                            elif lifgam == 'swrI':
+                                z1 = 'yasyAH'
+                            else:
+                                z1 = 'yasmAw'
+                            print(f"{x1} {y1} {z1}")
+
+                    # For Bs6: <x-y>Bs6 => x{1} y{1} यस्य/यस्याः/यस्य
+                    case tag if tag[-2:] == 's6':
+                        x1 = generator.generate_x_root_Bs3(x,lifgam, 1)
+                            
+                        y_list = generator.generate_y_root_B(y, 1)
+                        # Remove duplicate values in dictionary
+                        # Using dictionary comprehension
+                        temp = {val: key for key, val in y_list.items()}
+                        y_list = {val: key for key, val in temp.items()}
+                        for y1, lifgam in y_list.items():
+                            if lifgam == 'puM':
+                                z1 = 'yasya'
+                            elif lifgam == 'swrI':
+                                z1 = 'yasyAH'
+                            else:
+                                z1 = 'yasya'
+                            print(f"{x1} {y1} {z1}") 
+
+                    # For Bs7: <x-y>Bs7 => x{1} y{1} यस्मिन्/यस्याम्/यस्मिन्
+                    case tag if tag[-2:] == 's7':
+                        x1 = generator.generate_x_root_Bs3(x,lifgam, 1)
+                            
+                        y_list = generator.generate_y_root_B(y, 1)
+                        # Remove duplicate values in dictionary
+                        # Using dictionary comprehension
+                        temp = {val: key for key, val in y_list.items()}
+                        y_list = {val: key for key, val in temp.items()}
+                        for y1, lifgam in y_list.items():
+                            if lifgam == 'puM':
+                                z1 = 'yasmin'
+                            elif lifgam == 'swrI':
+                                z1 = 'yasyAm'
+                            else:
+                                z1 = 'yasmin'
+                            print(f"{x1} {y1} {z1}") 
+
+                    # For Bsd: <x-y>Bsd => x{6} च y{6} च यदन्तरालम्
+                    case tag if tag[-2:] == 'sd':
+                        x1 = generator.generate_x_root(x,lifgam, 6)
+                            
+                        y_list = generator.generate_y_root(y, 6)
+
+                        for y1 in list(set(y_list)):
+                            print(f"{x1} ca {y1} ca yaxanwarAlam")
+
+                    # For Bsp: <x-y>Bsp => x{3} च y{3} च प्रहृत्य इदम् युद्धम् प्रवृत्तम्
+                    case tag if tag[-2:] == 'sp':
+                        x1 = generator.generate_x_root(x,lifgam, 3)
+                            
+                        y_list = generator.generate_y_root(y, 3)
+
+                        for y1 in list(set(y_list)):
+                            print(f"{x1} ca {y1} ca prahqwya ixam yuxXam pravqwwam")
+                        
+
+                    # For Bsg: <x-y>Bsg => x{7}-y{7} गृहित्वा इदम् युद्धम् प्रवृत्तम्
+                    case tag if tag[-2:] == 'sg':
+                        x1 = generator.generate_x_root(x,lifgam, 7)
+                            
+                        y_list = generator.generate_y_root(y, 7)
+
+                        for y1 in list(set(y_list)):
+                            print(f"{x1} {y1} gqhiwvA ixam yuxXam pravqwwam")
+
+                    # For Bsmn: <x-y>Bsmn => न विद्यते y{1} यस्य/यस्याः/यस्य
+                    case tag if tag[-3:] == 'smn':
                         x1 = generator.generate_x_root(x,lifgam, 1)
-                                
-                        y_list = generator.generate_y_root(y, 1)
+                            
+                        y_list = generator.generate_y_root_B(y, 1)
+                        # Remove duplicate values in dictionary
+                        # Using dictionary comprehension
+                        temp = {val: key for key, val in y_list.items()}
+                        y_list = {val: key for key, val in temp.items()}
+                        for y1, lifgam in y_list.items():
+                            if lifgam == 'puM':
+                                z1 = 'yasya'
+                            elif lifgam == 'swrI':
+                                z1 = 'yasyAH'
+                            else:
+                                z1 = 'yasya'
+                            print(f"na vixyawe {y1} {z1}") 
+
+                    # For Bss: <x-y>Bss = > x{1} वा y{1} यस्य/यस्याः/यस्य
+                    case tag if tag[-2:] == 'ss':
+                        x1 = generator.generate_x_root(x,lifgam, 1)
+                            
+                        y_list = generator.generate_y_root_B(y, 1)
+                        # Remove duplicate values in dictionary
+                        # Using dictionary comprehension
+                        temp = {val: key for key, val in y_list.items()}
+                        y_list = {val: key for key, val in temp.items()}
+                        for y1, lifgam in y_list.items():
+                            if lifgam == 'puM':
+                                z1 = 'yasya'
+                            elif lifgam == 'swrI':
+                                z1 = 'yasyAH'
+                            else:
+                                z1 = 'yasya'
+                            print(f"{x1} vA {y1} {z1}") 
+
+                    # For Bsu: <x-y>Bsu => x{1} इव y{1} यस्य/यस्याः/यस्य
+                    case tag if tag[-2:] == 'su':
+                        x1 = generator.generate_x_root(x,lifgam, 1)
+                            
+                        y_list = generator.generate_y_root_B(y, 1)
+                        # Remove duplicate values in dictionary
+                        # Using dictionary comprehension
+                        temp = {val: key for key, val in y_list.items()}
+                        y_list = {val: key for key, val in temp.items()}
+                        for y1, lifgam in y_list.items():
+                            if lifgam == 'puM':
+                                z1 = 'yasya'
+                            elif lifgam == 'swrI':
+                                z1 = 'yasyAH'
+                            else:
+                                z1 = 'yasya'
+                            print(f"{x1} iva {y1} {z1}")
+
+                    # For Bv: <x-y>Bv => x y{1} यस्य/यस्याः/यस्य
+                    case tag if tag[-1:] == 'v':
+
+                        y_list = generator.generate_y_root_B(y, 1)
+                        # Remove duplicate values in dictionary
+                        # Using dictionary comprehension
+                        temp = {val: key for key, val in y_list.items()}
+                        y_list = {val: key for key, val in temp.items()}
+                        for y1, lifgam in y_list.items():
+                            if lifgam == 'puM':
+                                z1 = 'yasya'
+                            elif lifgam == 'swrI':
+                                z1 = 'yasyAH'
+                            else:
+                                z1 = 'yasya'
+                            print(f"{x} {y1} {z1}")
+
+                    # For Bvs: <x-y>Bvs => y{6} x’ ये सन्ति ते
+                    case tag if tag[-2:] == 'vs':
+                        x1 = generator.generate_x_root(x,lifgam, 1)
+                            
+                        y_list = generator.generate_y_root(y, 7)
+
+                        for y1 in list(set(y_list)):
+                            print(f"{y1} {x1} ye sanwi we")
+
+                    # For BvS: <x-y>BvS => y{3} सह
+                    case tag if tag[-2:] == 'vS':
+                        y_list = generator.generate_y_root(y, 3)
+
+                        for y1 in list(set(y_list)):
+                            print(f"{y1} saha")
+
+                    # For BvU: <x-y>BvU => x{6} इव y यस्य/यस्याः/यस्य
+                    case tag if tag[-2:] == 'vU':
+                        x1 = generator.generate_x_root(x,lifgam, 6)
+                            
+                        y_list = generator.generate_y_root_B(y, 1)
+                        # Remove duplicate values in dictionary
+                        # Using dictionary comprehension
+                        temp = {val: key for key, val in y_list.items()}
+                        y_list = {val: key for key, val in temp.items()}
+                        for y1, lifgam in y_list.items():
+                            if lifgam == 'puM':
+                                z1 = 'yasya'
+                            elif lifgam == 'swrI':
+                                z1 = 'yasyAH'
+                            else:
+                                z1 = 'yasya'
+                            print(f"{x1} iva {y} {z1}")
 
             ############################################## 
             # For S: <x-y>S => y{1} x{1}                 
