@@ -1,27 +1,9 @@
 import re
 import json
 import subprocess
-import generator
+import my_packages.generator as generator
 
-file_path = "tagged_examples.txt"
-
-with open(file_path, "r", encoding="utf-8") as file:
-    inputs = file.readlines()
-
-for tagged_input in inputs:
-
-    # Updated regex to capture any characters for x, y, and tag
-    pattern = r"<(.*?)-(.*?)>(.*)"
-
-    match = re.match(pattern, tagged_input)
-
-    if match:
-        x = match.group(1)
-        y = match.group(2)
-        tag = match.group(3)
-        print(f"x = {x}, y = {y}, tag = {tag}")
-    else:
-        print("Input format is incorrect.")
+def paraphrase_generator(x, y, tag):
 
     #############################################
     # Getting the gender
@@ -438,6 +420,63 @@ for tagged_input in inputs:
                                 z1 = 'yasya'
                             print(f"{x1} iva {y} {z1}")
 
+            ############################################
+            # For D Tag
+            case tag if tag[0] == 'D':
+                match tag:
+
+                    # <x-y+>Di => x{1} च (y{1} च)+ ; Here + indicates one or more occurences.
+                
+
+                    case tag if tag[1] == 'i':
+
+                        from itertools import product
+
+                        x1 = generator.generate_x_root(x, lifgam, 1)
+
+                        ys = y.split('-') if '-' in y else [y]
+
+                        # Collect roots for each y-part
+                        all_y_roots = []
+                        for y_part in ys:
+                            y_roots = generator.generate_y_root(y_part, 1)
+                            y_roots = list(set(y_roots))  # optional deduplication
+                            all_y_roots.append(y_roots)
+
+                        # Cartesian product of all y-roots
+                        for combo in product(*all_y_roots):
+                            full_line = f'{x1} ca ' + ' ca '.join(combo)
+                            print(full_line)
+                    
+                    # For Ds: <x-y+>Ds => x{1} च (y{1} च)+ एतत ्n समाहारः
+                    case tag if tag[1] == 's':
+
+                        from itertools import product
+
+                        x1 = generator.generate_x_root(x, lifgam, 1)
+                        print(x1)
+
+                        ys = y.split('-') if '-' in y else [y]
+
+                        y_length = len(ys)
+
+                        # Collect roots for each y-part
+                        all_y_roots = []
+                        for y_part in ys:
+                            y_roots = generator.generate_y_root_Bs2(y_part, 1)
+                            y_roots = list(set(y_roots))  # optional deduplication
+                            all_y_roots.append(y_roots)
+
+                        # Cartesian product of all y-roots
+                        for combo in product(*all_y_roots):
+
+                            if y_length == 1:
+                                full_line = f'{x1} ca ' + ' ca '.join(combo) + 'ewayoH samAhAraH'
+                                print(full_line)
+                            else:
+                                full_line = f'{x1} ca ' + ' ca '.join(combo) + 'eweRAm samAhAraH'
+                                print(full_line)
+
             ############################################## 
             # For S: <x-y>S => y{1} x{1}                 
             case tag if tag[0] == 'S':
@@ -454,4 +493,4 @@ for tagged_input in inputs:
                 print(f"{x} {y}")
 
             
-    print("#############################################")
+    #print("#############################################")
