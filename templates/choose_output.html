@@ -1,0 +1,16 @@
+<div>
+    {% if output_history %}
+        <div>
+            {{ output_history|join('<br>')|safe }}
+        </div>
+        <hr>
+    {% endif %}
+    <form id="chooseForm">
+        <input type="hidden" name="input_text" value="{{ current_input }}">
+        <input type="hidden" name="step" value="{{ step }}">
+        {% for out in outputs %}
+            <input type="radio" name="selected_output" value="{{ out }}" required> {{ out }}<br>
+        {% endfor %}
+        <button type="submit">Continue</button>
+    </form>
+</div>

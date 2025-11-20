@@ -1,0 +1,135 @@
+make changes in the script so that the following steps are taken:
+
+in case of <<<sIwA-pawi>T6-rAma>K1-anujaH>T6
+match a tag <x-y>tag
+so first sIwA-pawi with tag T6 is processed using the paraphrase_generator function and the output is printed and then since there is no prev x there is no need to print that along with the output.
+then we replace the tagged input processed with the processed components in the original input string so that now it is 
+<<sIwA pawi-rAma>K1-anujaH>T6
+
+next we process pawi-rAma with tag k1 and also print the prev x with the output and so on:
+Original Input: <<<sIwA-pawi>T6-rAma>K1-anujaH>T6
+Processing: <sIwA-pawi>T6
+  Generated output: sIwAyAH pawi
+Processing: <sIwA pawi-rAma>K1
+  Generated output: sIwA pawiH waw rAmam ca
+  Generated output: sIwA pawiH waw rAmaH ca
+Processing: <sIwA pawi rAma-anujaH>T6
+  Generated output: sIwA pawi rAmasya anujaH
+  Generated output: sIwA pawi rAmasya anujaH
+Final Processed Outputs:
+sIwA pawi rAmasya anujaH
+
+the above should be the output in the first case
+
+Moving on to the next case:
+<<sIwA-pawi>T6-<lakRmaNa-agrajaH>T6>K1
+first we match <sIwA-pawi>T6 so we process that and print the output and since th
+the output would be:
+ Generated output: sIwAyAH pawi
+then we replace the original input string with the components that were processed
+<sIwA pawi-<lakRmaNa-agrajaH>T6>K1
+next the matched string would be <lakRmaNa-agrajaH>T6
+then we process the obtained string
+and since we have processed components before this, we also print that as well
+so output would be sIwA pawi lakRmaNasya agrajaH
+then we replace the original input string with the components that have been processed so it become:
+<sIwA pawi-lakRmaNa agrajaH>K1
+then since the matched string would have x and y components with two words in the them,
+we would only take the last word
+so the new x and y would be <pawi-agrajaH>K1
+output would be:
+'pawiH waw agrajaH ca' but the proper output would need to contain the other words as well
+sIwa pawiH waw lakRmaNa agrajaH ca
+
+
+**updated**
+
+in case of <<<sIwA-pawi>T6-rAma>K1-anujaH>T6
+match a tag <x-y>tag
+so first sIwA-pawi with tag T6 is processed using the paraphrase_generator function and the output is printed and then since there is no prev x there is no need to print that along with the output.
+then we replace the tagged input processed with the processed components in the original input string so that now it is 
+<<sIwA_pawi-rAma>K1-anujaH>T6
+
+next we process pawi-rAma with tag k1 and also print the prev x with the output and so on:
+Original Input: <<<sIwA-pawi>T6-rAma>K1-anujaH>T6
+Processing: <sIwA-pawi>T6
+  Generated output: sIwAyAH pawi
+Processing: <sIwA_pawi-rAma>K1
+  Generated output: sIwA_pawiH saH rAmam ca
+  Generated output: sIwA_pawiH saH rAmaH ca
+Processing: <sIwA_pawi_rAma-anujaH>T6
+  Generated output: sIwA_pawi_rAmasya anujaH
+  Generated output: sIwA_pawi_rAmasya anujaH
+Final Processed Outputs:
+sIwA_pawi_rAmasya anujaH
+
+KEEP X AND Y CHAIN SEPERATE AND DONT ADD Y TO THE X CHAIN. 
+X XHAIN SHOULD CONTAIN THE CURRENT X AND WHATEVER COMES BEFORE IT SEPEATED 
+BY UNDERSCORE AND LETS CALL THE PREV X AND THE SAME GOES FOR Y AND WHEN 
+DISPLAYING THE OUTPUT ONCE YOU GET THE OUTUT FROM PARAPHRASE GENERATOR THEN FIND 
+THE PART THAT IS MOST SIMILAR TO CURRENT X AS IT CULD CHANGE AFTER PROCESSING AND 
+ADD THE PREV Xs JUST BEFORE IT ALSO SEPERATED BY UNDERSCORE AND DO THE SAME FOR Y 
+
+To be added:
+<<<<<samavAya-avacCinna>T3-<ganXawva-avacCinna>T3>K1-<<ganXa-niRTa>T7-AXeyawA>K1>K1-nirUpiwa>T3-aXikaraNawAvawI>K1
+
+samavAya avacCinna
+ganXawva avacCinna
+ganXa niRTa
+AXeyawA
+nirUpiwa
+aXikaraNawAvawI
+
+
+if tag == "Tm":
+
+        df = pd.read_csv('tm.csv')
+
+        tagged_input = f'<{x}-{y}>Tm'
+
+        if tagged_input in df['input'].values:
+            ind = df[df['input'] == tagged_input].index[0]
+            print(df.at[ind, 'output'].strip())
+
+        else:
+            print('No value found')
+
+        return
+
+
+<unmawwa-gafgam>A5
+
+mahe@mahe-ThinkPad-E14-Gen-5:~/scl/morph_bin$ lt-proc -c samAsa_upaxa.bin 
+gafgam
+^gafgam/gafga<vargaH:nA><lifgam:puM><viBakwiH:2><vacanam:eka><level:4>/gafga<vargaH:nA><lifgam:napuM><viBakwiH:1><vacanam:eka><level:4>/gafga<vargaH:nA><lifgam:napuM><viBakwiH:2><vacanam:eka><level:4>$
+gafga
+^gafga/gafgA<vargaH:SaUPaPuM><lifgam:swrI><level:0>/gafgA<vargaH:SaUPaPuM><plifgam:swrI><level:0>/gafgA<vargaH:SaUPaNapuM><lifgam:swrI><level:0>/gafgA<vargaH:SaUPaNapuM><plifgam:swrI><level:0>/gafga<vargaH:nA><lifgam:puM><viBakwiH:8><vacanam:eka><level:4>/gafga<vargaH:nA><lifgam:napuM><viBakwiH:8><vacanam:eka><level:4>$
+
+SONda XUrwa  kiwava  vyAda  pravINa  saMvIwa patu  paNdiwa  kuSala  capala  nipuNa
+
+
+<pra-AcAryaH>Tp
+<x-y>Tp  fx y
+
+There are 21 ‘x’ available. Each one of them has a set of meanings.
+pra  prakqRta, pracura, prAkASa
+x1  fx1 fx2 fx3
+x2  fx1 fx2
+-
+-
+X21  fx1 fx2 fx3 fx4
+<pra-AcAryaH>Tp
+•	prakqRtaH AcAryaH
+•	pracuraH AcAryaH
+•	prakASaH AcAryaH
+
+<pra-maXuram>Tp
+•	prakqRtam maXuram
+•	pracuram maXuram
+•	prakASam maXuram
+
+fx1 fx2 must follow the gender of y.
+
+
+in the case of x with hyphen call all_but_samBo...
+for all tags

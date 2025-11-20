@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Paraphrase Generator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Paraphrase Generator</h1>
+    <div class="container" style="display: flex; align-items: stretch;">
+        <div class="left" style="flex: 1; margin-right: 32px;">
+            <form method="POST" id="paraphrase_form">
+                <textarea id="input_text" name="input_text" placeholder="Enter tagged input" style="width:100%;height:400px;"></textarea>
+            </form>
+            <div class="examples" style="margin-top:16px;">
+                <strong>Examples:</strong>
+                <ul style="padding-left:18px;">
+                    <li>&lt;sIwA-pawi&gt;T6</li>
+                    <li>&lt;lakRmaNa-agrajaH&gt;T6</li>
+                    <li>&lt;&lt;sIwA-pawi&gt;T6-&lt;lakRmaNa-agrajaH&gt;T6&gt;K1</li>
+                    <li>&lt;&lt;&lt;sIwA-pawi&gt;T6-rAma&gt;K1-anujaH&gt;T6</li>
+                </ul>
+            </div>
+        </div>
+        <div class="middle" style="display:flex;flex-direction:column;align-items:center;justify-content:center;flex:0 0 220px;height:400px;">
+            <button type="submit" id="gen_btn" form="paraphrase_form" disabled style="width:180px;height:60px;margin-bottom:20px;">Generate Paraphrase</button>
+            <button id="show-instructions" style="width:180px;">Instructions</button>
+        </div>
+        <div class="right" style="flex: 1; margin-left: 32px; height:400px;">
+            <div id="output_area" style="width:100%;height:400px;background:#fff;overflow:auto;">
+                {% if output_html %}
+                    {{ output_html|safe }}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div id="instructions-modal" style="display:none;position:fixed;top:120px;left:120px;z-index:1000;background:#fff;border:2px solid #333;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,0.2);width:400px;">
+        <div id="modal-header" style="cursor:move;background:#f0f0f0;padding:8px 12px;border-bottom:1px solid #ccc;">
+            <span style="font-weight:bold;">How to use the Paraphrase Generator</span>
+            <button id="close-modal" style="float:right;">&times;</button>
+        </div>
+        <div style="padding:16px;">
+            <ul>
+                <li>Enter tagged input in the left box using the format: <b>&lt;x-y&gt;samasa-tag</b></li>
+                <li>Nested tags are allowed (e.g., <b>&lt;&lt;x-y&gt;samasa-tag1-&lt;a-b&gt;samasa-tag2&gt;samasa-tag3</b> is valid for nested tags).</li>
+                <li>Click <b>Generate Paraphrase</b> to see results on the right.</li>
+                <li>Use the examples below the input box for reference.</li>
+                <li>If your input format is incorrect, an error will be shown.</li>
+                <li>You can drag this instruction popup anywhere on the page.</li>
+            </ul>
+        </div>
+    </div>
+    <script>
+    // Show/hide modal
+        document.getElementById('show-instructions').onclick = function() {
+            document.getElementById('instructions-modal').style.display = 'block';
+        };
+        document.getElementById('close-modal').onclick = function() {
+            document.getElementById('instructions-modal').style.display = 'none';
+        };
+
+        // Drag functionality
+        var modal = document.getElementById('instructions-modal');
+        var header = document.getElementById('modal-header');
+        var offsetX, offsetY, isDown = false;
+
+        header.onmousedown = function(e) {
+            isDown = true;
+            offsetX = e.clientX - modal.offsetLeft;
+            offsetY = e.clientY - modal.offsetTop;
+            document.body.style.userSelect = 'none';
+        };
+        document.onmouseup = function() {
+            isDown = false;
+            document.body.style.userSelect = '';
+        };
+        document.onmousemove = function(e) {
+            if (!isDown) return;
+            modal.style.left = (e.clientX - offsetX) + 'px';
+            modal.style.top = (e.clientY - offsetY) + 'px';
+        };
+
+        // Enable/disable button
+        var btn = document.getElementById('gen_btn');
+        var textarea = document.getElementById('input_text');
+        textarea.addEventListener('input', function() {
+            btn.disabled = textarea.value.trim() === '';
+        });
+
+        // AJAX submit for paraphrase form
+        document.getElementById('paraphrase_form').onsubmit = function(e) {
+            e.preventDefault();
+            var formData = new FormData(this);
+            fetch('{{ url_for("process_step") }}', {
+                method: 'POST',
+                body: formData,
+                headers: {'X-Requested-With': 'XMLHttpRequest'}
+            })
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('output_area').innerHTML = html;
+                attachChooseFormHandler(); // Attach handler for chooseForm if present
+            });
+        };
+    </script>
+    <script>
+    function attachChooseFormHandler() {
+        var form = document.getElementById('chooseForm');
+        if (form) {
+            form.onsubmit = async function(e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+                const response = await fetch('{{ url_for("choose_output") }}', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {'X-Requested-With': 'XMLHttpRequest'}
+                });
+                const html = await response.text();
+                document.getElementById('output_area').innerHTML = html;
+                attachChooseFormHandler(); // Re-attach after AJAX update!
+            };
+        }
+    }
+    </script>
+    <script>
+    function attachChooseFormHandler() {
+        var form = document.getElementById('chooseForm');
+        if (form) {
+            form.onsubmit = async function(e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+                const response = await fetch('{{ url_for("choose_output") }}', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {'X-Requested-With': 'XMLHttpRequest'}
+                });
+                const html = await response.text();
+                document.getElementById('output_area').innerHTML = html;
+                attachChooseFormHandler(); // Re-attach after AJAX update!
+            };
+        }
+    }
+
+    // Attach handler on initial page load
+    document.addEventListener("DOMContentLoaded", function() {
+        attachChooseFormHandler();
+    });
+
+    // AJAX submit for paraphrase form
+    document.getElementById('paraphrase_form').onsubmit = function(e) {
+        e.preventDefault();
+        var formData = new FormData(this);
+        fetch('{{ url_for("process_step") }}', {
+            method: 'POST',
+            body: formData,
+            headers: {'X-Requested-With': 'XMLHttpRequest'}
+        })
+        .then(response => response.text())
+        .then(html => {
+            document.getElementById('output_area').innerHTML = html;
+            attachChooseFormHandler(); // Attach handler for chooseForm if present
+        });
+    };
+    </script>
+</body>
+</html>
